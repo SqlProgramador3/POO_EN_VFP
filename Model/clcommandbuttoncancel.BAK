@@ -1,0 +1,21 @@
+DEFINE CLASS clCommandButtonCancel as CommandButton
+	* Propiedades del CommandButton
+	Visible	= .t.
+	Width	= 200
+	Height 	= 30
+	Left		= 25
+	Top		= 145
+	Caption 	= "Cancelar"
+		
+	* Método Click: Maneja el evento Click del boton
+	FUNCTION Click()
+		
+		* Cerrar Formulario
+		ThisForm.Release()
+	ENDFUNC
+	
+	* Método Error: Maneja errores en tiempo de ejecución
+	FUNCTION Error(nError, cMethod, nLine)
+        		oHelper.HandleError(nError, cMethod, nLine, "clCommandButtonCancel")
+	ENDFUNC
+ENDDEFINE

@@ -1,0 +1,37 @@
+DEFINE CLASS clCommandButton as CommandButton
+	* Propiedades
+	Visible	= .t.
+	Width	= 200
+	Height 	= 30
+	Left		= 25
+	Top		= 105
+	Caption 	= "Confirmar"
+	
+	* Variables
+	HIDDEN oTextBox, cValue, cMessage, nStyle, cTitle
+	
+	* Método de inicialización de la clase
+	FUNCTION Init(oTextBoxForm AS Object)
+		This.oTextBox = oTextBoxForm
+	ENDFUNC
+	
+	
+	HIDDEN FUNCTION click() && "oTextBox" es la referencia al objecto TextBox
+		
+		cValue = This.oTextBox.Value
+		
+		IF !EMPTY(cValue)
+			*"El valor del TextBox es: " + cValue
+			This.ShowMessageBox("Es Valido", 64, "Titulo")
+		ELSE
+			This.ShowMessageBox("Sin valor asignado al TextBox.", 64, "Alerta")
+		ENDIF
+	ENDFUNC
+	
+	* Estilo = 0: Vacio - 16: Error - 32: Pregunta - 48: Alerta - 64: Exclamación
+	* ShowMessageBox(Mesaje, Estilo, Titulo)
+	HIDDEN FUNCTION ShowMessageBox(cMessage AS STRING, nStyle AS INT, cTitle AS STRING) AS VOID
+		MESSAGEBOX(cMessage, nStyle, cTitle)
+	ENDFUNC
+	
+ENDDEFINE
