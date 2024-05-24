@@ -1,7 +1,5 @@
-* /// <summary>
-* /// Clase Label
-* /// </summary>
 DEFINE CLASS clLabel as Label
+	* Propiedades del Label
 	Visible 	= .t.
 	Width  	= 230
 	Height 	= 50

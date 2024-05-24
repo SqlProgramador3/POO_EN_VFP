@@ -1,5 +1,0 @@
-DEFINE CLASS myClass as Custom
-	FUNCTION Init()
-
-	ENDFUNC
-ENDDEFINE

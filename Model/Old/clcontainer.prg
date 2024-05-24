@@ -8,18 +8,13 @@ DEFINE CLASS clContainer as Container
 
 	* Constructor
 	FUNCTION Init()
-		* Label (Titulo)
-		This.AddObject("oLabel", "clLabel")
 		
-		* TextBox ( KeyPress / LostFocus )
+		* TextBox
 		This.AddObject("oTextBox", "clTextBox")
-		
-		* Boton ( Validación )
-		This.AddObject("oCommandButton1", "clCommandButtonConfirm")
-		This.AddObject("oCommandButton2", "clCommandButtonCancel")
-		
+		This.AddObject("oTextBox", "clTextBox")
+
 		* Lista de Usuarios
-		This.AddObject("cUserList", "clUserList")
+		*This.AddObject("cUserList", "clUserList")
 	
 		* Pasar la referencia del CommandButton al TextBox
 		This.oTextBox.AddProperty("oCommandButton", This.oCommandButton1)

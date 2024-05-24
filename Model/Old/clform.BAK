@@ -21,7 +21,7 @@ DEFINE CLASS clForm AS Form
 		SET PROCEDURE TO "clCommandButtonCancel" ADDITIVE
 		SET PROCEDURE TO "clUserList" ADDITIVE
 		SET PROCEDURE TO "clUser" ADDITIVE
-		SET PROCEDURE TO "clHelper" ADDITIVE
+		SET PROCEDURE TO "clError" ADDITIVE
 	ENDFUNC
 
 	* Método Destroy: Manejar los eventos al cerrar el formulario
@@ -38,8 +38,8 @@ DEFINE CLASS clForm AS Form
 	ENDFUNC
 	
 	* Método Error: Maneja errores en tiempo de ejecución
-	FUNCTION Error(nError, cMethod, nLine)
+	FUNCTION Error(nError AS Number, cMethod AS String, nLine AS Number)
 		* Llama a la función de manejo de errores en la clase clHelper
-        		This.oHelper.HandleError(nError, cMethod, nLine, "clForm")
+        This.oHelper.HandleError(nError, cMethod, nLine, "clForm")
 	ENDFUNC
 ENDDEFINE
