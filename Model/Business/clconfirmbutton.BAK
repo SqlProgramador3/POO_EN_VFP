@@ -1,0 +1,41 @@
+* /// <summary>
+* /// Clase Boton confirmar
+* /// </summary>
+DEFINE CLASS clConfirmButton as CommandButton
+	Visible	= .t.
+	Enabled	= .f.
+	Width	= 200
+	Height 	= 30
+	Left		= 50
+	Top		= 155
+	Caption 	= "Confirmar"
+
+	* /// <summary>
+	* /// Procedimiento Click: Maneja el evento Click del boton
+	* /// </summary>
+	PROCEDURE Click()
+
+		ThisForm.oUserController.
+
+		PRIVATE oUser, cValue, cMessage, cText
+		
+		* Valor del TextBox
+		cValue = RTRIM(This.oTextBox.Value)
+
+		* Usuario buscado
+		oFoundUser = This.SearchValue(cValue)
+		
+		* Validar Información para el mensaje
+		cMessage = This.ValidateUser(oFoundUser, cValue)
+		
+		* Crear Mensaje
+		MESSAGEBOX(cMessage, 64, "Estado de la consulta")
+	ENDPROC
+
+	* /// <summary>
+	* /// Procedimiento Error: Maneja errores
+	* /// </summary>
+	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
+		ThisForm.oUserController.HandleError(nError, cMethod, nLine, "clConfirmButton")
+	ENDPROC
+ENDDEFINE
