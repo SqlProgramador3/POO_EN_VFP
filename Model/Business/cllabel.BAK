@@ -11,11 +11,11 @@ DEFINE CLASS clLabel as Label
 	Alignment	= 2
 	
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// Procedimiento Init: Inicializaciï¿½n de la clase
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="cTitle">Texto para el caption</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="cTitle">Texto para el caption</param>
+	* /// </paragramList>
 	PROCEDURE Init
 		LPARAMETERS cTitle AS String
 		This.Caption = cTitle
@@ -24,11 +24,11 @@ DEFINE CLASS clLabel as Label
 	* /// <summary>
 	* /// Procedimiento Error: Maneja errores
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">		Número del error			</param>
-	* /// 	<Param Name="cMethod">	Nombre del Metodo			</param>
-	* /// 	<Param Name="nLine">		Número de la linea del error	</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">		Nï¿½mero del error			</param>
+	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 	<param Name="nLine">		Nï¿½mero de la linea del error	</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC

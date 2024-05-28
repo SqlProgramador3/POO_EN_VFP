@@ -1,5 +1,5 @@
 DEFINE CLASS clUser AS Custom
-	IdUser 	= 0
+	IdUser 	= ""
 	Cedula    	= ""
 	FullName 	= ""
 	

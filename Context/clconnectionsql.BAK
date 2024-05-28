@@ -10,7 +10,7 @@ DEFINE CLASS clConnectionSQL AS CUSTOM
 	* /// </summary>
 	PROCEDURE Init(cConnectionString AS String)
 		This.cConnString = cConnectionString
-		This.oConn = CREATEOBJECT("ADODB.Connection")ss
+		This.oConn = CREATEOBJECT("ADODB.Connection")
 	ENDPROC
 
 	* /// <summary>
@@ -24,6 +24,20 @@ DEFINE CLASS clConnectionSQL AS CUSTOM
 		RETURN This.oConn.State
 	ENDFUNC
 	
+	FUNCTION GetResultByQuery(cQuery AS String)
+		PRIVATE oCmd AS Object
+		
+		oCmd = CREATEOBJECT("ADODB.Command")
+		
+		oCmd.ActiveConnection = This.oConn
+		
+		oCmd.CommandText = cQuery
+		
+		oResult = oCmd.Execute()
+		
+		RETURN oResult
+	ENDFUNC
+	
 	* /// <summary>
 	* /// Función CloseConnection: Cierra la conexión SQL
 	* /// </summary>
@@ -34,11 +48,11 @@ DEFINE CLASS clConnectionSQL AS CUSTOM
 	* /// <summary>
 	* /// Procedimiento HandleError: Maneja errores en tiempo de ejecución
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">	Número del error	</param>
-	* /// 	<Param Name="cMethod">	Nombre del metodo	</param>
-	* /// 	<Param Name="nLine">	Número de linea		</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">	Número del error	</param>
+	* /// 	<param Name="cMethod">	Nombre del metodo	</param>
+	* /// 	<param Name="nLine">	Número de linea		</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		LOCAL cMessage AS String, cErrorMessage AS String, cClassName AS String
 		*Nombre de la clase

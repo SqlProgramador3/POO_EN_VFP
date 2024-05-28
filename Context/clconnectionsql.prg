@@ -34,11 +34,11 @@ DEFINE CLASS clConnectionSQL AS CUSTOM
 	* /// <summary>
 	* /// Procedimiento HandleError: Maneja errores en tiempo de ejecución
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">	Número del error	</param>
-	* /// 	<Param Name="cMethod">	Nombre del metodo	</param>
-	* /// 	<Param Name="nLine">	Número de linea		</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">	Número del error	</param>
+	* /// 	<param Name="cMethod">	Nombre del metodo	</param>
+	* /// 	<param Name="nLine">	Número de linea		</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		LOCAL cMessage AS String, cErrorMessage AS String, cClassName AS String
 		*Nombre de la clase

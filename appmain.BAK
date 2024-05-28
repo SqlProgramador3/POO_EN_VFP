@@ -7,75 +7,76 @@ DEFINE CLASS clAppMain AS Custom
 	* /// Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	PROCEDURE Init()
-		PRIVATE oForm AS Form, oController AS Object, oConnectionSQL AS Object, cConnectionString AS String
+		PRIVATE oConnectionSQL AS Object, oController AS Object, oForm AS Form
+		This.SetPath()
 		
-		* Definir rutas y configuración inicial
-		SET PATH TO ;
-			"Context; " + ;
-			"Controller; " + ;
-			"Model\Entities; " + ;
-			"Model\Business"
-
-		* Cargar procedimientos
 		SET PROCEDURE TO ;
 			"clUserController", ;
 			"clConnectionSQL", ;
 			"clForm" ;
 		ADDITIVE
-
-		* Conexión con mi base de datos
-		cConnectionString = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=projectCrud;Data Source=OPA119\SQL2022"
-		oConnectionSQL = CREATEOBJECT("clConnectionSQL", cConnectionString)
 		
-		* Controlador
-		oController = CREATEOBJECT("clUserController")
+		oConnectionSQL = This.GetConnection()
 		
-		* Formulario
+		oController = CREATEOBJECT(;
+			"clUserController", ; 	&& Referencia de mi Controlador
+			oConnectionSQL;  	&& Conexión SQL
+		)
 		oForm = CREATEOBJECT(;
-			"clForm", ;		 && Referencia de mi clase FORM
-			oController, ;	 && Controlador
-			oConnectionSQL; && Conexión SQL
+			"clForm", ;		&& Referencia de mi clase FORM
+			oController;	&& Controlador
 		)
 		
 		* Objetos del formulario
 		oForm.AddObject("oLabel", "clLabel", "Consultar Usuario")
 		oForm.AddObject("oContainer", "clContainer")
-		oForm.AddObject("oButtonConfirm", "clConfirmButton")
+		oForm.AddObject("oConfirmbutton", "clConfirmButton")
 		oForm.AddObject("oCancelButton", "clCancelButton")
-
+		
 		* Mostrar el formulario
 		oForm.Show(1)
-
+		
 		* Liberar procedimientos
-		RELEASE PROCEDURE ;
-			"clForm", ;
-			"clUserController"
+		RELEASE PROCEDURE;
+			"clUserController", ;
+			"clConnectionSQL", ;
+			"clError", ;
+			"clForm"
 	ENDPROC
 	
+
 	* /// <summary>
-	* /// Procedimiento HandleError: Maneja errores en tiempo de ejecución
+	* /// Procedimiento SetPath: Definir rutas
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">	Número del error	</param>
-	* /// 	<Param Name="cMethod">	Nombre del metodo	</param>
-	* /// 	<Param Name="nLine">	Número de linea		</param>
-	* /// </ParagramList>
+	HIDDEN PROCEDURE SetPath()
+		SET PATH TO ;
+			"Context; " + ;
+			"Controller; " + ;
+			"Model\Entities; " + ;
+			"Model\Business"s
+	ENDPROC
+
+	* /// <summary>
+	* /// Función GetConnection: Conexión BD SQL
+	* /// </summary>
+	HIDDEN FUNCTION GetConnection()
+		LOCAL cConnectionString AS String
+		cConnectionString = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=POO_VFP;Data Source=OPA119\SQL2022"
+		oConnectionSQL = CREATEOBJECT("clConnectionSQL", cConnectionString)
+		oConnectionSQL.OpenConnection()
+		return oConnectionSQL
+	ENDFUNC
+
+	* /// <summary>
+	* /// Procedimiento Error: Maneja errores en tiempo de ejecución
+	* /// </summary>
+	* /// <paragramList>
+	* /// 	<param Name="nError">	Número del error	</param>
+	* /// 	<param Name="cMethod">	Nombre del metodo	</param>
+	* /// 	<param Name="nLine">	Número de linea		</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		LOCAL cMessage AS String, cErrorMessage AS String, cClassName AS String
-		*Nombre de la clase
-		cClassName = This.Class
-		
-		* Texto de la linea donde ocurre el error
-		cErrorMessage = MESSAGE(nError)
-		
-		* Crear mensaje
-		cMessage = ;
-			"Error: " + TRANSFORM(nError) + CHR(13) + ; 		&& Número de error
-			"Clase: " + cClassName + CHR(13) + ;				&& Nombre de la clase
-			"Método: " + cMethod + CHR(13) + ;				&& Metodo donde ocurre
-			"Línea: " + TRANSFORM(nLine) + " - " + cErrorMessage	&& Linea de código
-		
-		* Imprimir mensaje
-		MESSAGEBOX(cMessage, 16, "Error en " + cClassName)
+		className = This.Class
+		Do clError With m.nError, m.cMethod, m.nLine, m.className, Program()
 	ENDPROC
 ENDDEFINE

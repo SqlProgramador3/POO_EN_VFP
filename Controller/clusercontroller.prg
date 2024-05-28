@@ -3,46 +3,64 @@
 * /// </summary>
 DEFINE CLASS clUserController as Custom
 	oForm = .Null.
-	
-	PROCEDURE Init(_oForm AS Object)
-		This.oForm = _oForm
+	oConnection = .Null.
+
+	* /// <summary>
+	* /// Procedimiento Init: Inicialización de la clase
+	* /// </summary>
+	* /// <paragramList>
+	* /// 	<param Name="_oConnectionSQL">Conexión SQL</param>
+	* /// </paragramList>
+	PROCEDURE Init(_oConnection AS Object)
+		This.oConnection = _oConnection
 	ENDPROC
 
 	* /// <summary>
 	* /// Método IsValidKeyCode: Valida si el código de la tecla es permitido segun el tipo de textbox
 	* /// </summary>
-	PROTECTED FUNCTION IsValidKeyCode(nKeyCode AS Number, nType AS Number)
+	* /// <paragramList>
+	* /// 	<param Name="_oConnectionSQL">Conexión SQL</param>
+	* /// </paragramList>
+	PROCEDURE IsValidKeyCode( nKeyCode AS Number, nType AS Number )
+		PRIVATE bIsValid
+		
 		IF nType == 0
-			RETURN validateIsNumber(nKeyCode)
+			bIsValid = This.ValidateIsNumber( nKeyCode )
 		ELSE
-			RETURN validateIsName(nKeyCode)
+			bIsValid = This.ValidateIsName( nKeyCode )
 		ENDIF
-	ENDFUNC
-
+		
+		This.PrintKeyPress( bIsValid )
+	ENDPROC
+	
 	* /// <summary>
-	* /// Función validateIsNumber: Validar si las teclas estan disponibles para un numero
+	* /// Función ValidateIsNumber: Validar si las teclas estan disponibles para un numero
 	* /// </summary>
-	HIDDEN FUNCTION validateIsNumber(nKeyCode)
-		LOCAL isValid
+	HIDDEN FUNCTION ValidateIsNumber( nKeyCode As Number )
+		LOCAL isValid AS Boolean
 
 		isValid = .f.
 
 		* Evaluo el campo
 		DO CASE
 			CASE nKeyCode >= 48 AND nKeyCode <= 57  && Números del 0 al 9
+			
 				isValid = .t.
+				
 			CASE INLIST(nKeyCode, 7, 127, 1, 6, 19, 4, 5, 24)  && Otras teclas permitidas
+			
 				isValid = .t.
+				
 		ENDCASE
 
 		RETURN isValid
 	ENDFUNC
 
 	* /// <summary>
-	* /// Función validateIsName: Validar si las teclas estan disponibles para un Nombre
+	* /// Función ValidateIsName: Validar si las teclas estan disponibles para un Nombre
 	* /// </summary>
-	PROTECTED FUNCTION validateIsName(nKeyCode)
-		LOCAL isValid
+	HIDDEN FUNCTION ValidateIsName(nKeyCode)
+		LOCAL AS Boolean
 
 		isValid = .f.
 
@@ -57,83 +75,85 @@ DEFINE CLASS clUserController as Custom
 		RETURN isValid
 	ENDFUNC
 	
-	
-	* /// <summary>
-	* /// Función SetInputMask: Establecer mascara de entrada
-	* /// </summary>
-	* /// <ParagramList>
-	* ///  <Param Name="oTextBox">	Objeto TextBox									</param>
-	* ///  <Param Name="nType">		Tipo de TextBox (Número == "0" o Texto == "1")	</param>
-	* /// </ParagramList>
-	* /// <Return Name=""></Return>
-	PROTECTED FUNCTION SetInputMask(oTextBox AS Object, nType AS Number)
-		IF nType == 0
-			oTextBox.InputMask = "9999999999"
-		ELSE
-			oTextBox.InputMask = ""
-		ENDIF
-	ENDFUNC
-	
-
-	* /// <summary>
-	* /// Función ValidateUser: Validar si la información es correcta
-	* /// </summary>
-	PROTECTED FUNCTION ValidateUser(oUser AS Object, cValue AS String)
-		LOCAL cText
-		
-		* Si no es NULL
-		IF !ISNULL(oUser)
-			cText = "Corresponde a:"	+ CHR(13) + ;
-			oUser.UserName	+ " " + oUser.UserLastName 
-		
-		* Si es NULL
-		ELSE
-			cText = "No existe en la lista"
-		ENDIF
-		
-		* Creo mi mensaje
-		cMessage = "La cédula:" + CHR(13) + ; 
-				    cValue + CHR(13) + CHR(13) + ;
-				    cText
-	        
-		RETURN cMessage 
-	ENDFUNC
-
 	* /// <summary>
 	* /// Función IsEmpty: Valida si esta vacio
 	* /// </summary>
-	PROTECTED FUNCTION IsEmpty(valueTextBox AS String)
-		LOCAL isValid
-		
-		isValid = .f. && Inicio en Falso
-		
-		* Si esta vacio
-		IF !EMPTY(valueTextBox)
-			isValid = .t.
+	HIDDEN PROCEDURE PrintKeyPress(isValid AS Boolean)
+		IF !isValid
+			NODEFAULT
 		ENDIF
-		
-		RETURN isValid
-	ENDFUNC
+	ENDPROC
+	
+	* /// <summary>
+	* /// Función IsEmpty: Valida si esta vacio
+	* /// </summary>
+	PROCEDURE IsEmpty(cValue AS String)
+		* Si no esta vacio
+		IF !EMPTY(cValue)
+			This.EnableButton( .t. )
+		ELSE 
+			This.EnableButton( .f. )
+		ENDIF
+	ENDPROC
+	
+	* /// <summary>
+	* /// Función IsEmpty: Valida si esta vacio
+	* /// </summary>
+	* /// <paragramList>
+	* /// 	<param Name="valueTextBox"></param>
+	* /// </paragramList>
+	HIDDEN PROCEDURE EnableButton(bEnabled  AS Boolean)
+		This.oForm.oConfirmbutton.Enabled = bEnabled
+	ENDPROC
 
 	* /// <summary>
-	* /// Función SearchValue: Para buscar el valor enviado por el usuario
+	* /// Función GetUser: Obtener un usuario
 	* /// </summary>
-	PROTECTED FUNCTION SearchValue(cValue as String)
-		LOCAL oUser, i
+	PROCEDURE GetUser()
+		PRIVATE oFoundUser AS clUser, cValueCedula AS String
 		
-		* Verificar si el Valor está en la lista
-		FOR i = 1 TO This.oUserList.Count
-			
-			* Usuario
-			oUser = This.oUserList.Item(i)
-			
-			* Si los ID coinciden
-			IF oUser.UserId == cValue
-				RETURN oUser
-			ENDIF
-		ENDFOR
-	        
-		RETURN .NULL.
+		cValueCedula = RTRIM( This.oForm.oContainer.oTextBoxCedula.Value )
+		
+		oFoundUser = This.SearchUserByCedula( cValueCedula )
+	ENDPROC
+
+	* /// <summary>
+	* /// Función SearchUserByCedula: Buscar Usuario con el valor enviado por el usuario
+	* /// </summary>
+	HIDDEN FUNCTION SearchUserByCedula(cValue as String)
+		LOCAL cQuery, oResult
+		
+		cQuery = "EXEC spGetUserByCedula @cedula = '"+ cValue +"';" 
+		
+		oResult = This.GetResultByQuery( cQuery )
+		
+		This.SetFullName( oResult )
+	ENDFUNC
+	
+	HIDDEN FUNCTION GetResultByQuery(cQuery AS String)
+		LOCAL oCmd AS Object
+		
+		oCmd = CREATEOBJECT("ADODB.Command")
+		
+		oCmd.ActiveConnection = This.oConnection.oConn
+		
+		oCmd.CommandText = cQuery
+		
+		oResult = oCmd.Execute()
+		
+		RETURN oResult
+	ENDFUNC
+	
+	HIDDEN FUNCTION SetFullName(oResult AS Object)
+		LOCAL cFullName
+		
+		IF NOT oResult.EOF
+			cFullName	= oResult.Fields(0).value
+		ELSE
+			cFullName	= "No se encontraron resultados."
+		ENDIF
+		
+		This.oForm.oContainer.oTextBoxFullName.Value = cFullName
 	ENDFUNC
 
 	* /// <summary>
@@ -155,20 +175,27 @@ DEFINE CLASS clUserController as Custom
 	* /// Procedimiento CloseSetupProcedures: Manejar los eventos al cerrar el formulario
 	* /// </summary>
 	PROCEDURE CloseSetupProcedures()
-		RELEASE PROCEDURE "clContainer", "clLabel", "clTextbox", "clConfirmButton", "clCancelButton", "clUserList", "clUser"
-		
-		ThisForm.Release()
+		RELEASE PROCEDURE ;
+			"clContainer", ;
+			"clLabel", ;
+			"clTextbox", ;
+			"clConfirmButton", ;
+			"clCancelButton", ;
+			"clUserList", ;
+			"clUser"
+		This.oConnection.CloseConnection()
+		This.oForm.Release()
 	ENDPROC
 
 	* /// <summary>
 	* /// Procedimiento HandleError: Maneja errores en tiempo de ejecución
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">		Número del error	</param>
-	* /// 	<Param Name="cMethod">		Nombre del metodo	</param>
-	* /// 	<Param Name="nLine">		Número de linea		</param>
-	* /// 	<Param Name="cClassName">	Nombre de la clase	</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">		Número del error	</param>
+	* /// 	<param Name="cMethod">		Nombre del metodo	</param>
+	* /// 	<param Name="nLine">		Número de linea		</param>
+	* /// 	<param Name="cClassName">	Nombre de la clase	</param>
+	* /// </paragramList>
 	PROCEDURE HandleError(nError AS Number, cMethod AS String, nLine AS Number, cClassName AS String)
 		LOCAL cMessage AS String, cErrorMessage AS String
 			
@@ -184,5 +211,17 @@ DEFINE CLASS clUserController as Custom
 		
 		* Imprimir mensaje
 		MESSAGEBOX(cMessage, 16, "Error en " + cClassName)
+	ENDPROC
+	
+	* /// <summary>
+	* /// Procedimiento Error: Maneja errores
+	* /// </summary>
+	* /// <paragramList>
+	* /// 	<param Name="nError">		Número del error			</param>
+	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 	<param Name="nLine">		Número de la linea del error	</param>
+	* /// </paragramList>
+	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
+		This.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC
 ENDDEFINE

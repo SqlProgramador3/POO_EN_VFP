@@ -12,18 +12,32 @@ DEFINE CLASS clContainer as Container
 	* /// Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	PROCEDURE Init
-		This.AddObject("oTextBoxCedula", "clTextBox", 0)
-		This.AddObject("oTextBoxFullName", "clTextBox", 1)
+		This.AddObject(;
+			"oTextBoxCedula", ;	&& Nombre
+			"clTextBox", ;		&& Nombre de la clase referenciada
+			15, ;				&& Top
+			0, ;				&& Tipo
+			"9999999999", ;		&& InputMask
+			.t.;				&& Activo - Inactivo
+		)
+		This.AddObject(;
+			"oTextBoxFullName", ; && Nombre
+			"clTextBox", ;		&& Nombre de la clase referenciada
+			55, ;				&& Top
+			1, ;				&& Tipo
+			"", ;				&& InputMask
+			.f.;				&& Activo - Inactivo
+		)
 	ENDPROC
 
 	* /// <summary>
 	* /// Procedimiento Error: Maneja errores
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">		Número del error			</param>
-	* /// 	<Param Name="cMethod">	Nombre del Metodo			</param>
-	* /// 	<Param Name="nLine">		Número de la linea del error	</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">		Número del error			</param>
+	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 	<param Name="nLine">		Número de la linea del error	</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC

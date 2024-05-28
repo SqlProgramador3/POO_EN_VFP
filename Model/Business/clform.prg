@@ -2,40 +2,31 @@
 * /// Clase Formulario
 * /// </summary>
 DEFINE CLASS clForm AS Form
-	Caption 	= "Consultar usuario"
-	Width	= 300
-	Height	= 250
-	oController = .Null.
-	oConnectionSQL = .Null.
+	Caption 		= "Usuario"
+	Width		= 300
+	Height		= 250
+	oController 	= .Null.
 
 	* /// <summary>
 	* /// Procedimiento Init: Inicialización de la clase
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="_oConnectionSQL">	Conexión SQL	</param>
-	* /// 	<Param Name="_oController">		Controlador	</param>
-	* /// </ParagramList>
-	PROCEDURE Init(_oController AS Object, _oConnectionSQL AS Object)
-		This.oController = _oController
-		This.oConnectionSQL = _oConnectionSQL
-		This.oController.SetupProcedures()
-	ENDPROC
-
-	* /// <summary>
-	* /// Procedimiento Destroy: Manejar los eventos al cerrar el formulario
-	* /// </summary>
-	HIDDEN PROCEDURE Destroy()
-		This.oController.CloseSetupProcedures()
+	* /// <paragramList>
+	* /// 	<param Name="_oController">		Controlador	</param>
+	* /// </paragramList>
+	PROCEDURE Init(_oController AS Object)
+		This.oController = _oController		&& Asigna el controlador 
+		This.oController.oForm = This		&& Establece referencia del formulario en el controlador
+		This.oController.SetupProcedures()	&& Configura los procedimientos.
 	ENDPROC
 
 	* /// <summary>
 	* /// Procedimiento Error: Maneja errores
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">	Número del error		</param>
-	* /// 	<Param Name="cMethod">	Nombre del Metodo		</param>
-	* /// 	<Param Name="nLine">	Número de la linea del error	</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">	Número del error		</param>
+	* /// 	<param Name="cMethod">	Nombre del Metodo		</param>
+	* /// 	<param Name="nLine">	Número de la linea del error	</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC

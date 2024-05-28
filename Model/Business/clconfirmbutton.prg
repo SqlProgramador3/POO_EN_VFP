@@ -9,37 +9,23 @@ DEFINE CLASS clConfirmButton as CommandButton
 	Left		= 50
 	Top		= 155
 	Caption 	= "Confirmar"
+	MousePointer = 15
 
 	* /// <summary>
 	* /// Procedimiento Click: Maneja el evento Click del boton
 	* /// </summary>
 	PROCEDURE Click()
-
-		ThisForm.oUserController.
-
-		PRIVATE oUser, cValue, cMessage, cText
-		
-		* Valor del TextBox
-		cValue = RTRIM(This.oTextBox.Value)
-
-		* Usuario buscado
-		oFoundUser = This.SearchValue(cValue)
-		
-		* Validar Información para el mensaje
-		cMessage = This.ValidateUser(oFoundUser, cValue)
-		
-		* Crear Mensaje
-		MESSAGEBOX(cMessage, 64, "Estado de la consulta")
+		ThisForm.oController.GetUser()
 	ENDPROC
 
 	* /// <summary>
 	* /// Procedimiento Error: Maneja errores
 	* /// </summary>
-	* /// <ParagramList>
-	* /// 	<Param Name="nError">		Número del error			</param>
-	* /// 	<Param Name="cMethod">	Nombre del Metodo			</param>
-	* /// 	<Param Name="nLine">		Número de la linea del error	</param>
-	* /// </ParagramList>
+	* /// <paragramList>
+	* /// 	<param Name="nError">		Número del error			</param>
+	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 	<param Name="nLine">		Número de la linea del error	</param>
+	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC
