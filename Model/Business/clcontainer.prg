@@ -1,5 +1,5 @@
 * /// <summary>
-* /// Clase Contenedor
+* /// 		Clase Contenedor
 * /// </summary>
 DEFINE CLASS clContainer as Container
 	Visible	= .t.
@@ -9,7 +9,7 @@ DEFINE CLASS clContainer as Container
 	Top		= 45
 
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	PROCEDURE Init
 		This.AddObject(;
@@ -31,12 +31,12 @@ DEFINE CLASS clContainer as Container
 	ENDPROC
 
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores
+	* /// 		Procedimiento Error: Maneja errores
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">		Número del error			</param>
-	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
-	* /// 	<param Name="nLine">		Número de la linea del error	</param>
+	* /// 		<param Name="nError">		Número del error			</param>
+	* /// 		<param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 		<param Name="nLine">		Número de la linea del error	</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)

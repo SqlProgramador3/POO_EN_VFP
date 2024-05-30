@@ -1,5 +1,5 @@
 * /// <summary>
-* /// Clase Label
+* /// 		Clase Label
 * /// </summary>
 DEFINE CLASS clLabel as Label 
 	Visible	= .t.
@@ -11,23 +11,22 @@ DEFINE CLASS clLabel as Label
 	Alignment	= 2
 	
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="cTitle">Texto para el caption</param>
+	* /// 		<param Name="cTitle">Texto para el caption</param>
 	* /// </paragramList>
-	PROCEDURE Init
-		LPARAMETERS cTitle AS String
+	PROCEDURE Init( cTitle AS Strign )
 		This.Caption = cTitle
 	ENDPROC
 	
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores
+	* /// 		Procedimiento Error: Maneja errores
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">	  Número del error			</param>
-	* /// 	<param Name="cMethod">Nombre del Metodo		</param>
-	* /// 	<param Name="nLine">	  Número de la linea del error	</param>
+	* /// 		<param Name="nError">	  Número del error			</param>
+	* /// 		<param Name="cMethod">Nombre del Metodo		</param>
+	* /// 		<param Name="nLine">	  Número de la linea del error	</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)

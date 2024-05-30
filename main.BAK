@@ -3,11 +3,8 @@
 * 3) SET DEFAULT TO Establece la ruta por defecto del aplicativo
 SET DEFAULT TO (JUSTPATH(SYS(16,0)))
 
-* Cargar la clase principal de la aplicación
-SET PROCEDURE TO "AppMain" ADDITIVE
+SET PROCEDURE TO "AppMain", "Settings" ADDITIVE && Cargar la clase principal de la aplicación
 
-* Crear la instancia de la aplicación principal
-oApp = CREATEOBJECT("clAppMain")
-
-* Liberar procedimientos
-RELEASE PROCEDURE "AppMain"
+oApp = CREATEOBJECT("clAppMain") && Crear la instancia de la aplicación principal
+ 
+RELEASE PROCEDURE "AppMain", "Settings" && Liberar procedimientos

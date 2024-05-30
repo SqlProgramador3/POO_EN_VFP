@@ -1,5 +1,5 @@
 * /// <summary>
-* /// Clase Formulario
+* /// 		Clase Formulario
 * /// </summary>
 DEFINE CLASS clForm AS Form
 	Caption 		= "Usuario"
@@ -8,10 +8,10 @@ DEFINE CLASS clForm AS Form
 	oController 	= .Null.
 
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="_oController">		Controlador	</param>
+	* /// 		<param Name="_oController">Controlador</param>
 	* /// </paragramList>
 	PROCEDURE Init(_oController AS Object)
 		This.oController = _oController		&& Asigna el controlador 
@@ -20,12 +20,12 @@ DEFINE CLASS clForm AS Form
 	ENDPROC
 
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores
+	* /// 		Procedimiento Error: Maneja errores
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">	Número del error		</param>
-	* /// 	<param Name="cMethod">	Nombre del Metodo		</param>
-	* /// 	<param Name="nLine">	Número de la linea del error	</param>
+	* /// 		<param Name="nError">	Número del error		</param>
+	* /// 		<param Name="cMethod">	Nombre del Metodo		</param>
+	* /// 		<param Name="nLine">	Número de la linea del error	</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)

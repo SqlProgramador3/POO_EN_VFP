@@ -1,5 +1,5 @@
 * /// <summary>
-* /// Clase Boton confirmar
+* /// 		Clase Boton confirmar
 * /// </summary>
 DEFINE CLASS clConfirmButton as CommandButton
 	Visible	= .t.
@@ -12,19 +12,19 @@ DEFINE CLASS clConfirmButton as CommandButton
 	MousePointer = 15
 
 	* /// <summary>
-	* /// Procedimiento Click: Maneja el evento Click del boton
+	* /// 		Procedimiento Click: Maneja el evento Click del boton
 	* /// </summary>
 	PROCEDURE Click()
 		ThisForm.oController.GetUser()
 	ENDPROC
 
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores
+	* /// 		Procedimiento Error: Maneja errores
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">		Número del error			</param>
-	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
-	* /// 	<param Name="nLine">		Número de la linea del error	</param>
+	* /// 		<param Name="nError">		Número del error			</param>
+	* /// 		<param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 		<param Name="nLine">		Número de la linea del error	</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)

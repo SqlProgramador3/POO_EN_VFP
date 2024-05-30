@@ -1,5 +1,5 @@
 * /// <summary>
-* /// Clase Boton Cancelar
+* /// 		Clase Boton Cancelar
 * /// </summary>
 DEFINE CLASS clCancelButton as CommandButton
 	Visible	= .t.
@@ -11,19 +11,19 @@ DEFINE CLASS clCancelButton as CommandButton
 	MousePointer = 15
 
 	* /// <summary>
-	* /// Procedimiento Click: Maneja el evento Click del boton
+	* /// 		Procedimiento Click: Maneja el evento Click del boton
 	* /// </summary>
 	PROCEDURE Click()
 		ThisForm.oController.CloseSetupProcedures()
 	ENDPROC
 	
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores
+	* /// 		Procedimiento Error: Maneja errores
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">	Número del error		</param>
-	* /// 	<param Name="cMethod">	Nombre del Metodo		</param>
-	* /// 	<param Name="nLine">	Número de la linea del error	</param>
+	* /// 		<param Name="nError">	Número del error		</param>
+	* /// 		<param Name="cMethod">	Nombre del Metodo		</param>
+	* /// 		<param Name="nLine">	Número de la linea del error	</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
 		ThisForm.oController.HandleError(nError, cMethod, nLine, This.Class)

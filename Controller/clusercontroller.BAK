@@ -4,6 +4,7 @@
 DEFINE CLASS clUserController as Custom
 	oForm = .Null.
 	oConnection = .Null.
+	oErrorController = .Null.
 
 	* /// <summary>
 	* /// Procedimiento Init: Inicialización de la clase
@@ -11,9 +12,10 @@ DEFINE CLASS clUserController as Custom
 	* /// <paragramList>
 	* /// 	<param Name="_oConnectionSQL">Conexión SQL</param>
 	* /// </paragramList>
-	PROCEDURE Init(_oConnection AS Object)
+	PROCEDURE Init(_oConnection AS Object, _oErrorController AS Object)
 		This.oConnection = _oConnection
-	ENDPROC
+		This.oErrorController = _oErrorController
+	ENDPROCa
 
 	* /// <summary>
 	* /// Método IsValidKeyCode: Valida si el código de la tecla es permitido segun el tipo de textbox
@@ -153,7 +155,6 @@ DEFINE CLASS clUserController as Custom
 			cFullName	= "No se encontraron resultados."
 		ENDIF
 		
-	
 		This.oForm.oContainer.oTextBoxFullName.Value = cFullName
 	ENDFUNC
 
@@ -223,6 +224,6 @@ DEFINE CLASS clUserController as Custom
 	* /// 	<param Name="nLine">		Número de la linea del error	</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		This.HandleError(nError, cMethod, nLine, This.Class)
+		This.oErrorController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC
 ENDDEFINE

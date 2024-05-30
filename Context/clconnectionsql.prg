@@ -1,12 +1,12 @@
 * /// <summary>
-* /// Clase Conexión SQL
+* /// 		Clase Conexión SQL
 * /// </summary>
 DEFINE CLASS clConnectionSQL AS CUSTOM
 	oConn = .Null.
 	cConnString = .Null.
 
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	PROCEDURE Init(cConnectionString AS String)
 		This.cConnString = cConnectionString
@@ -14,7 +14,7 @@ DEFINE CLASS clConnectionSQL AS CUSTOM
 	ENDPROC
 
 	* /// <summary>
-	* /// Función OpenConnection: Abre la conexión SQL
+	* /// 		Función OpenConnection: Abre la conexión SQL
 	* /// </summary>
 	* /// <Return Name="This.oConn.State">Estado al abrir la conexión SQL</Return>
 	FUNCTION OpenConnection()
@@ -25,22 +25,23 @@ DEFINE CLASS clConnectionSQL AS CUSTOM
 	ENDFUNC
 	
 	* /// <summary>
-	* /// Función CloseConnection: Cierra la conexión SQL
+	* /// 		Procedimiento CloseConnection: Cierra la conexión SQL
 	* /// </summary>
 	PROCEDURE CloseConnection()
 		This.oConn.Close()
 	ENDPROC
 
 	* /// <summary>
-	* /// Procedimiento HandleError: Maneja errores en tiempo de ejecución
+	* /// 		Procedimiento Error: Maneja errores en tiempo de ejecución
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">	Número del error	</param>
-	* /// 	<param Name="cMethod">	Nombre del metodo	</param>
-	* /// 	<param Name="nLine">	Número de linea		</param>
+	* /// 		<param Name="nError">	Número del error	</param>
+	* /// 		<param Name="cMethod">	Nombre del metodo	</param>
+	* /// 		<param Name="nLine">	Número de linea		</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		LOCAL cMessage AS String, cErrorMessage AS String, cClassName AS String
+		LOCAL cMessage, cErrorMessage, cClassName
+		
 		*Nombre de la clase
 		cClassName = This.Class
 		

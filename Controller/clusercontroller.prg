@@ -4,22 +4,26 @@
 DEFINE CLASS clUserController as Custom
 	oForm = .Null.
 	oConnection = .Null.
+	oErrorController = .Null.
 
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="_oConnectionSQL">Conexión SQL</param>
+	* /// 		<param Name="_oConnection">Conexión a la base de datos</param>
+	* /// 		<param Name="_oErrorController">Controlador de errores</param>
 	* /// </paragramList>
-	PROCEDURE Init(_oConnection AS Object)
+	PROCEDURE Init( _oConnection AS Object, _oErrorController AS Object )
 		This.oConnection = _oConnection
+		This.oErrorController = _oErrorController
 	ENDPROC
 
 	* /// <summary>
 	* /// Método IsValidKeyCode: Valida si el código de la tecla es permitido segun el tipo de textbox
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="_oConnectionSQL">Conexión SQL</param>
+	* /// 		<param Name="nKeyCode">	Tecla presionada</param>
+	* /// 		<param Name="nType">	Tipo de textbox	</param>
 	* /// </paragramList>
 	PROCEDURE IsValidKeyCode( nKeyCode AS Number, nType AS Number )
 		PRIVATE bIsValid
@@ -34,58 +38,60 @@ DEFINE CLASS clUserController as Custom
 	ENDPROC
 	
 	* /// <summary>
-	* /// Función ValidateIsNumber: Validar si las teclas estan disponibles para un numero
+	* /// 		Función ValidateIsNumber: Validar si es número
 	* /// </summary>
+	* /// <Return Name="bIsValid">Retorna .t. o .f. para la validación de un número</Return>
 	HIDDEN FUNCTION ValidateIsNumber( nKeyCode As Number )
-		LOCAL isValid AS Boolean
+		LOCAL bIsValid
 
-		isValid = .f.
+		bIsValid = .f.
 
 		* Evaluo el campo
 		DO CASE
 			CASE nKeyCode >= 48 AND nKeyCode <= 57  && Números del 0 al 9
 			
-				isValid = .t.
+			bIsValid = .t.
 				
 			CASE INLIST(nKeyCode, 7, 127, 1, 6, 19, 4, 5, 24)  && Otras teclas permitidas
 			
-				isValid = .t.
+			bIsValid = .t.
 				
 		ENDCASE
 
-		RETURN isValid
+		RETURN bIsValid
 	ENDFUNC
 
 	* /// <summary>
-	* /// Función ValidateIsName: Validar si las teclas estan disponibles para un Nombre
+	* /// 		Función ValidateIsName: Validar si las teclas estan disponibles para un Nombre
 	* /// </summary>
-	HIDDEN FUNCTION ValidateIsName(nKeyCode)
-		LOCAL AS Boolean
+	* /// <Return Name="bIsValid">Retorna .t. o .f. para la validación de un número</Return>
+	HIDDEN FUNCTION ValidateIsName( nKeyCode AS Number )
+		LOCAL bIsValid
 
-		isValid = .f.
+		bIsValid = .t.
 
 		*!*	 * Evaluo el campo
 		*!*	 DO CASE
 		*!*	 	CASE nKeyCode >= 48 AND nKeyCode <= 57  && Números del 0 al 9
-		*!*	 		isValid = .t.
+		*!*	 		bIsValid = .t.
 		*!*	 	CASE INLIST(nKeyCode, 7, 127, 1, 6, 19, 4, 5, 24)  && Otras teclas permitidas
-		*!*	 		isValid = .t.
+		*!*	 		bIsValid = .t.
 		*!*	 ENDCASE
 
-		RETURN isValid
+		RETURN bIsValid
 	ENDFUNC
 	
 	* /// <summary>
-	* /// Función IsEmpty: Valida si esta vacio
+	* /// 		Procedimiento PrintKeyPress: permite o no copiar en el input
 	* /// </summary>
-	HIDDEN PROCEDURE PrintKeyPress(isValid AS Boolean)
-		IF !isValid
+	HIDDEN PROCEDURE PrintKeyPress(bIsValid AS Boolean)
+		IF !bIsValid
 			NODEFAULT
 		ENDIF
 	ENDPROC
 	
 	* /// <summary>
-	* /// Función IsEmpty: Valida si esta vacio
+	* /// 		Procedimiento IsEmpty: Valida si esta vacio el textbox
 	* /// </summary>
 	PROCEDURE IsEmpty(cValue AS String)
 		* Si no esta vacio
@@ -97,20 +103,20 @@ DEFINE CLASS clUserController as Custom
 	ENDPROC
 	
 	* /// <summary>
-	* /// Función IsEmpty: Valida si esta vacio
+	* /// 		Procedimiento EnableButton: Habilitar boton
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="valueTextBox"></param>
+	* /// 		<param Name="bEnabled">Validación si se activa o no el boton</param>
 	* /// </paragramList>
 	HIDDEN PROCEDURE EnableButton(bEnabled  AS Boolean)
 		This.oForm.oConfirmbutton.Enabled = bEnabled
 	ENDPROC
 
 	* /// <summary>
-	* /// Función GetUser: Obtener un usuario
+	* /// 		Procedimiento GetUser: Obtener un usuario
 	* /// </summary>
 	PROCEDURE GetUser()
-		PRIVATE oFoundUser AS clUser, cValueCedula AS String
+		PRIVATE cValueCedula, oFoundUser
 		
 		cValueCedula = RTRIM( This.oForm.oContainer.oTextBoxCedula.Value )
 		
@@ -118,9 +124,9 @@ DEFINE CLASS clUserController as Custom
 	ENDPROC
 
 	* /// <summary>
-	* /// Función SearchUserByCedula: Buscar Usuario con el valor enviado por el usuario
+	* /// 		Función SearchUserByCedula: Buscar Usuario con el valor enviado por el usuario
 	* /// </summary>
-	HIDDEN FUNCTION SearchUserByCedula(cValue as String)
+	HIDDEN FUNCTION SearchUserByCedula( cValue as String )
 		LOCAL cQuery, oResult
 		
 		cQuery = "EXEC spGetUserByCedula @cedula = '"+ cValue +"';" 
@@ -130,8 +136,15 @@ DEFINE CLASS clUserController as Custom
 		This.SetFullName( oResult )
 	ENDFUNC
 	
-	HIDDEN FUNCTION GetResultByQuery(cQuery AS String)
-		LOCAL oCmd AS Object
+	* /// <summary>
+	* /// 		Función GetResultByQuery: Obtener el resultado de una consulta
+	* /// </summary>
+	* /// <paragramList>
+	* ///      <param Name="cQuery">String con consulta SQL</param>
+	* /// </paragramList>
+	* /// <Return Name="oResult">Retorna un objecto con el resultado de la consulta</Return>
+	HIDDEN FUNCTION GetResultByQuery( cQuery AS String )
+		LOCAL oCmd
 		
 		oCmd = CREATEOBJECT("ADODB.Command")
 		
@@ -144,7 +157,14 @@ DEFINE CLASS clUserController as Custom
 		RETURN oResult
 	ENDFUNC
 	
-	HIDDEN FUNCTION SetFullName(oResult AS Object)
+	* /// <summary>
+	* /// 		Procedimiento SetFullName: Establece el nombre del usuario en el textbos
+	* /// </summary>
+	* /// <paragramList>
+	* ///      <param Name="oResult"></param>
+	* /// </paragramList>
+	* /// <Return Name=""></Return>
+	HIDDEN PROCEDURE SetFullName(oResult AS Object)
 		LOCAL cFullName
 		
 		IF NOT oResult.EOF
@@ -157,7 +177,7 @@ DEFINE CLASS clUserController as Custom
 	ENDFUNC
 
 	* /// <summary>
-	* /// Procedimiento SetupProcedures: Manejar la configuración inicial del formulario
+	* /// 		Procedimiento SetupProcedures: Manejar la configuración inicial
 	* /// </summary>
 	PROCEDURE SetupProcedures()
 		SET PROCEDURE TO ;
@@ -166,13 +186,12 @@ DEFINE CLASS clUserController as Custom
 			"clTextbox", ;
 			"clConfirmButton", ;
 			"clCancelButton", ;
-			"clUserList", ;
 			"clUser";
 		ADDITIVE
 	ENDPROC
 
 	* /// <summary>
-	* /// Procedimiento CloseSetupProcedures: Manejar los eventos al cerrar el formulario
+	* /// 		Procedimiento CloseSetupProcedures: Manejar los eventos al cerrar
 	* /// </summary>
 	PROCEDURE CloseSetupProcedures()
 		RELEASE PROCEDURE ;
@@ -181,47 +200,20 @@ DEFINE CLASS clUserController as Custom
 			"clTextbox", ;
 			"clConfirmButton", ;
 			"clCancelButton", ;
-			"clUserList", ;
 			"clUser"
 		This.oConnection.CloseConnection()
 		This.oForm.Release()
 	ENDPROC
-
-	* /// <summary>
-	* /// Procedimiento HandleError: Maneja errores en tiempo de ejecución
-	* /// </summary>
-	* /// <paragramList>
-	* /// 	<param Name="nError">		Número del error	</param>
-	* /// 	<param Name="cMethod">		Nombre del metodo	</param>
-	* /// 	<param Name="nLine">		Número de linea		</param>
-	* /// 	<param Name="cClassName">	Nombre de la clase	</param>
-	* /// </paragramList>
-	PROCEDURE HandleError(nError AS Number, cMethod AS String, nLine AS Number, cClassName AS String)
-		LOCAL cMessage AS String, cErrorMessage AS String
-			
-		* Texto de la linea donde ocurre el error
-		cErrorMessage = MESSAGE(nError)
-		
-		* Crear mensaje
-		cMessage = ;
-			"Error: " + TRANSFORM(nError) + CHR(13) + ; 		&& Número de error
-			"Clase: " + cClassName + CHR(13) + ;				&& Nombre de la clase
-			"Método: " + cMethod + CHR(13) + ;				&& Metodo donde ocurre
-			"Línea: " + TRANSFORM(nLine) + " - " + cErrorMessage	&& Linea de código
-		
-		* Imprimir mensaje
-		MESSAGEBOX(cMessage, 16, "Error en " + cClassName)
-	ENDPROC
 	
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores
+	* /// 		Procedimiento Error: Maneja errores
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">		Número del error			</param>
-	* /// 	<param Name="cMethod">	Nombre del Metodo			</param>
-	* /// 	<param Name="nLine">		Número de la linea del error	</param>
+	* /// 		<param Name="nError">	Número del error			</param>
+	* /// 		param Name="cMethod">	Nombre del Metodo			</param>
+	* /// 		<param Name="nLine">	Número de la linea del error</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		This.HandleError(nError, cMethod, nLine, This.Class)
+		This.oErrorController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC
 ENDDEFINE

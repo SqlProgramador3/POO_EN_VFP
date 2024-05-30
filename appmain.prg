@@ -1,30 +1,37 @@
 * /// <summary>
-* /// Clase Inicial del aplicativo
+* /// 		Clase Inicial del aplicativo
 * /// </summary>
 DEFINE CLASS clAppMain AS Custom
+	oErrorController = .Null.
+	oConnectionSQL = .Null.
 	
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	PROCEDURE Init()
-		PRIVATE oConnectionSQL AS Object, oController AS Object, oForm AS Form
+		PRIVATE oController AS Object, oForm AS Form
+		
 		This.SetPath()
 		
 		SET PROCEDURE TO ;
 			"clUserController", ;
 			"clConnectionSQL", ;
-			"clError", ;
+			"clErrorController", ;
 			"clForm" ;
 		ADDITIVE
 		
 		oConnectionSQL = This.GetConnection()
 		
+		oErrorController = CREATEOBJECT("clErrorController")
+		
 		oController = CREATEOBJECT(;
-			"clUserController", ; 	&& Referencia de mi Controlador
-			oConnectionSQL;  	&& Conexión SQL
+			"clUserController", ; 	&& Controladore Base
+			oConnectionSQL, ;  	&& Conexión SQL
+			oErrorController;		&& Control de errores
 		)
+		
 		oForm = CREATEOBJECT(;
-			"clForm", ;		&& Referencia de mi clase FORM
+			"clForm", ;		&& Referencia de mi clase FORM Base
 			oController;	&& Controlador
 		)
 		
@@ -41,43 +48,49 @@ DEFINE CLASS clAppMain AS Custom
 		RELEASE PROCEDURE;
 			"clUserController", ;
 			"clConnectionSQL", ;
-			"clError", ;
+			"clErrorController", ;
 			"clForm"
 	ENDPROC
 	
 
 	* /// <summary>
-	* /// Procedimiento SetPath: Definir rutas
+	* /// 		Procedimiento SetPath: Definir rutas
 	* /// </summary>
 	HIDDEN PROCEDURE SetPath()
 		SET PATH TO ;
 			"Context; " + ;
 			"Controller; " + ;
 			"Model\Entities; " + ;
-			"Model\Business"s
+			"Model\Business"
 	ENDPROC
 
+
+
 	* /// <summary>
-	* /// Función GetConnection: Conexión BD SQL
+	* /// 		Función GetConnection: Conexión BD SQL
 	* /// </summary>
+	* /// <Return Name="oConnectionSQL">Objeto con mi conexión abierta a mi base de datos</Return>
 	HIDDEN FUNCTION GetConnection()
 		LOCAL cConnectionString AS String
+		
 		cConnectionString = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=POO_VFP;Data Source=OPA119\SQL2022"
+		
 		oConnectionSQL = CREATEOBJECT("clConnectionSQL", cConnectionString)
+		
 		oConnectionSQL.OpenConnection()
+		
 		return oConnectionSQL
 	ENDFUNC
 
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores en tiempo de ejecución
+	* /// 		Procedimiento Error: Maneja errores en tiempo de ejecución
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">	Número del error	</param>
-	* /// 	<param Name="cMethod">	Nombre del metodo	</param>
-	* /// 	<param Name="nLine">	Número de linea		</param>
+	* /// 		<param Name="nError">	Número del error	</param>
+	* /// 		<param Name="cMethod">	Nombre del metodo	</param>
+	* /// 		<param Name="nLine">	Número de linea		</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		className = This.Class
-		Do clError With m.nError, m.cMethod, m.nLine, m.className, Program()
+		This.oErrorController.HandleError(nError, cMethod, nLine, This.Class)
 	ENDPROC
 ENDDEFINE

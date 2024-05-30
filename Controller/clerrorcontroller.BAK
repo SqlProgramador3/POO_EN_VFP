@@ -1,8 +1,6 @@
-DEFINE CLASS clError AS Custom
-
-    PROCEDURE HandleError()
-        LPARAMETERS nError, cMethod, nLine, cClassName
-
+DEFINE CLASS clErrorController AS Custom
+    PROCEDURE HandleError(nError, cMethod, nLine, cClassName)
+    	LPARAMETERS nError, cMethod, nLine, cClassName
 		LOCAL cMessage, cErrorMessage
 			
 		* Texto de la linea donde ocurre el error
@@ -18,5 +16,5 @@ DEFINE CLASS clError AS Custom
 		* Imprimir mensaje
 		MESSAGEBOX(cMessage, 16, "Error en " + cClassName)
 	ENDPROC
-
 ENDDEFINE
+
