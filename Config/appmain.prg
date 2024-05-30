@@ -1,12 +1,13 @@
+return CREATEOBJECT("clAppMain")
 * /// <summary>
-* /// Clase Inicial del aplicativo
+* /// 		Clase Inicial del aplicativo
 * /// </summary>
 DEFINE CLASS clAppMain AS Custom
 	oErrorController = .Null.
 	oConnectionSQL = .Null.
 	
 	* /// <summary>
-	* /// Procedimiento Init: Inicialización de la clase
+	* /// 		Procedimiento Init: Inicialización de la clase
 	* /// </summary>
 	PROCEDURE Init()
 		PRIVATE oController AS Object, oForm AS Form
@@ -27,7 +28,7 @@ DEFINE CLASS clAppMain AS Custom
 		oController = CREATEOBJECT(;
 			"clUserController", ; 	&& Controladore Base
 			oConnectionSQL, ;  	&& Conexión SQL
-			oErrorController;			&& Control de errores
+			oErrorController;		&& Control de errores
 		)
 		
 		oForm = CREATEOBJECT(;
@@ -51,22 +52,12 @@ DEFINE CLASS clAppMain AS Custom
 			"clErrorController", ;
 			"clForm"
 	ENDPROC
-	
+
 
 	* /// <summary>
-	* /// Procedimiento SetPath: Definir rutas
+	* /// 		Función GetConnection: Conexión BD SQL
 	* /// </summary>
-	HIDDEN PROCEDURE SetPath()
-		SET PATH TO ;
-			"Context; " + ;
-			"Controller; " + ;
-			"Model\Entities; " + ;
-			"Model\Business"
-	ENDPROC
-
-	* /// <summary>
-	* /// Función GetConnection: Conexión BD SQL
-	* /// </summary>
+	* /// <Return Name="oConnectionSQL">Objeto con mi conexión abierta a mi base de datos</Return>
 	HIDDEN FUNCTION GetConnection()
 		LOCAL cConnectionString AS String
 		
@@ -78,17 +69,27 @@ DEFINE CLASS clAppMain AS Custom
 		
 		return oConnectionSQL
 	ENDFUNC
+	
+	* /// <summary>
+	* /// 		Procedimiento SetPath: Definir rutas
+	* /// </summary>
+	HIDDEN PROCEDURE SetPath()
+		SET PATH TO ;
+			"Context; " + ;
+			"Controllers; " + ;
+			"Model\Entities; " + ;
+			"Model\Business"
+	ENDPROC
 
 	* /// <summary>
-	* /// Procedimiento Error: Maneja errores en tiempo de ejecución
+	* /// 		Procedimiento Error: Maneja errores en tiempo de ejecución
 	* /// </summary>
 	* /// <paragramList>
-	* /// 	<param Name="nError">	Número del error	</param>
-	* /// 	<param Name="cMethod">	Nombre del metodo	</param>
-	* /// 	<param Name="nLine">	Número de linea		</param>
+	* /// 		<param Name="nError">	Número del error	</param>
+	* /// 		<param Name="cMethod">	Nombre del metodo	</param>
+	* /// 		<param Name="nLine">	Número de linea		</param>
 	* /// </paragramList>
-	*PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		*DO clErrorController
-		*This.oError.HandleError(nError, cMethod, nLine, This.Class)
-	*ENDPROC
+	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
+		This.oErrorController.HandleError(nError, cMethod, nLine, This.Class)
+	ENDPROC
 ENDDEFINE

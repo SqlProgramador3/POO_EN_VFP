@@ -19,7 +19,7 @@ WHILE @i <= 100
 BEGIN
     INSERT INTO tblUsuarios (Cedula, FullName)
     VALUES (
-        -- Generar una cédula aleatoria
+        -- Generar una cï¿½dula aleatoria
         CONVERT(VARCHAR(50), ABS(CHECKSUM(NEWID())) % 1000000000), 
 
         -- Generar un nombre completo aleatorio
@@ -50,8 +50,8 @@ BEGIN
 END
 GO
 
-EXEC spGetUserByCedula @cedula = '170959609';
+-- EXEC spGetUserByCedula @cedula = '170959609';
 
-DROP PROCEDURE spGetUserByCedula
+-- DROP PROCEDURE spGetUserByCedula
 
 SELECT * FROM tblUsuarios;

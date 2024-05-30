@@ -1,3 +1,4 @@
+return CREATEOBJECT("clAppMain")
 * /// <summary>
 * /// 		Clase Inicial del aplicativo
 * /// </summary>
@@ -51,19 +52,6 @@ DEFINE CLASS clAppMain AS Custom
 			"clErrorController", ;
 			"clForm"
 	ENDPROC
-	
-
-	* /// <summary>
-	* /// 		Procedimiento SetPath: Definir rutas
-	* /// </summary>
-	HIDDEN PROCEDURE SetPath()
-		SET PATH TO ;
-			"Context; " + ;
-			"Controller; " + ;
-			"Model\Entities; " + ;
-			"Model\Business"
-	ENDPROC
-
 
 
 	* /// <summary>
@@ -81,6 +69,17 @@ DEFINE CLASS clAppMain AS Custom
 		
 		return oConnectionSQL
 	ENDFUNC
+	
+	* /// <summary>
+	* /// 		Procedimiento SetPath: Definir rutas
+	* /// </summary>
+	HIDDEN PROCEDURE SetPath()
+		SET PATH TO ;
+			"Context; " + ;
+			"Controller; " + ;
+			"Model\Entities; " + ;
+			"Model\Business"
+	ENDPROC
 
 	* /// <summary>
 	* /// 		Procedimiento Error: Maneja errores en tiempo de ejecución
