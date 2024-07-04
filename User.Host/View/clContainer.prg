@@ -1,38 +1,37 @@
 * /// --------------------------------------------------------------------------------------------------------------------
-* /// <copyright file="main.prg" company="Opa SAS">
+* /// <copyright file="clContainer.prg" company="Opa SAS">
 * ///      All rights reserved.
 * /// </copyright>
 * /// <summary>
-* /// Initializer class of my project.
+* /// Container class.
 * /// </summary>
 * /// --------------------------------------------------------------------------------------------------------------------
 
-CREATEOBJECT("main")
+DEFINE CLASS clContainer as Container
+	Visible	= .t.
+	Width	= 250
+	Height 	= 100
+	Left		= 25
+	Top		= 45
 
-DEFINE CLASS main As Custom
-	
 	* /// <summary>
 	* /// Class constructor.
 	* /// </summary>
-	PROCEDURE Init()
-		SET DEFAULT TO ( JUSTPATH( SYS( 16,0 ) ) )
-
-		SET PROCEDURE TO "User.Host\clProgram" ADDITIVE
-
-		oApp = CREATEOBJECT("clProgram")
-
-		RELEASE PROCEDURE "User.Host\clProgram"
+	PROCEDURE Init
+		This.AddObject("oTextBoxCedula", "clTextBox", 15, 0, "9999999999", .t.)
+		This.AddObject("oTextBoxFullName", "clTextBox", 55, 1, "", .f.)
 	ENDPROC
-	
+
 	* /// <summary>
 	* /// Handle errors at runtime.
 	* /// </summary>
+	* /// <paragramList>
 	* /// <paragramList>
 	* ///      <param Name="nError">Error number.</param>
 	* ///      <param Name="cMethod">Name of the method.</param>
 	* ///      <param Name="nLine">Line number.</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		DO "User.Host\Extensions\clExceptionHandlerExtension" WITH nError, cMethod, nLine, This.Class
+		DO clExceptionHandlerExtension WITH nError, cMethod, nLine, This.Class
 	ENDPROC
 ENDDEFINE

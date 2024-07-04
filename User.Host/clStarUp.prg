@@ -1,0 +1,68 @@
+* /// --------------------------------------------------------------------------------------------------------------------
+* /// <copyright file="clStarUp.prg" company="Opa SAS">
+* ///      All rights reserved.
+* /// </copyright>
+* /// <summary>
+* /// Base configuration of the application.
+* /// </summary>
+* /// --------------------------------------------------------------------------------------------------------------------
+
+DEFINE CLASS clStarUp As Custom
+
+	* /// <summary>
+	* /// Class constructor.
+	* /// </summary>
+	PROCEDURE Init()
+		This.SetupPaht()
+		This.SetupStarUp()
+	ENDPROC
+	
+	* /// <summary>
+	* /// Initial application configuration.
+	* /// </summary>
+	PROCEDURE SetupStarUp()
+		PRIVATE oForm
+		SET PROCEDURE TO "clConnectionSQLRepository", "clUserForm" ADDITIVE
+		
+		PRIVATE oConnection
+		oConnection = CREATEOBJECT( ;
+						"clConnectionSQLRepository", ;
+						"Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=POO_VFP;Data Source=OPA119\SQL2022")
+						
+		IF oConnection.OpenConnection() == 1
+			CREATEOBJECT( "clUserForm", oConnection )
+		ELSE
+			MESSAGEBOX("No fue posible conectar a la base de datos", 16, "Error al Iniciar ")
+			QUIT
+		ENDIF
+		
+		RELEASE PROCEDURE "clConnectionSQLRepository", "clUserForm"
+	ENDPROC
+	
+	* /// <summary>
+	* /// Route configuration.
+	* /// </summary>
+	PROCEDURE SetupPaht()
+		SET PATH TO ;
+			"User.Context; " + ;
+			"User.Context\Context; " + ;
+			"User.Context\Repositories; " + ;
+			"User.Controller; " + ;
+			"User.Host; " + ;
+			"User.Host\Extensions; " + ;
+			"User.Host\View; " + ;
+			"User.Test"
+	ENDPROC
+		
+	* /// <summary>
+	* /// Handle errors at runtime.
+	* /// </summary>
+	* /// <paragramList>
+	* ///      <param Name="nError">Error number.</param>
+	* ///      <param Name="cMethod">Name of the method.</param>
+	* ///      <param Name="nLine">Line number.</param>
+	* /// </paragramList>
+	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
+		DO clExceptionHandlerExtension WITH nError, cMethod, nLine, This.Class
+	ENDPROC
+ENDDEFINE

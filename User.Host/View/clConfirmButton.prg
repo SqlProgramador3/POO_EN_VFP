@@ -1,38 +1,39 @@
 * /// --------------------------------------------------------------------------------------------------------------------
-* /// <copyright file="main.prg" company="Opa SAS">
+* /// <copyright file="clConfirmButton.prg" company="Opa SAS">
 * ///      All rights reserved.
 * /// </copyright>
 * /// <summary>
-* /// Initializer class of my project.
+* /// Confirm Button class.
 * /// </summary>
 * /// --------------------------------------------------------------------------------------------------------------------
 
-CREATEOBJECT("main")
+DEFINE CLASS clConfirmButton as CommandButton
+	Visible	= .t.
+	Enabled	= .f.
+	Width	= 200
+	Height 	= 30
+	Left		= 50
+	Top		= 155
+	Caption 	= "Confirmar"
+	MousePointer = 15
 
-DEFINE CLASS main As Custom
-	
 	* /// <summary>
-	* /// Class constructor.
+	* /// Handles the Click event of the button.
 	* /// </summary>
-	PROCEDURE Init()
-		SET DEFAULT TO ( JUSTPATH( SYS( 16,0 ) ) )
-
-		SET PROCEDURE TO "User.Host\clProgram" ADDITIVE
-
-		oApp = CREATEOBJECT("clProgram")
-
-		RELEASE PROCEDURE "User.Host\clProgram"
+	PROCEDURE Click()
+		ThisForm.oController.GetUser()
 	ENDPROC
-	
+
 	* /// <summary>
 	* /// Handle errors at runtime.
 	* /// </summary>
+	* /// <paragramList>
 	* /// <paragramList>
 	* ///      <param Name="nError">Error number.</param>
 	* ///      <param Name="cMethod">Name of the method.</param>
 	* ///      <param Name="nLine">Line number.</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		DO "User.Host\Extensions\clExceptionHandlerExtension" WITH nError, cMethod, nLine, This.Class
+		DO clExceptionHandlerExtension WITH nError, cMethod, nLine, This.Class
 	ENDPROC
 ENDDEFINE

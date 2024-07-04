@@ -1,29 +1,27 @@
 * /// --------------------------------------------------------------------------------------------------------------------
-* /// <copyright file="main.prg" company="Opa SAS">
+* /// <copyright file="clProgram.prg" company="Opa SAS">
 * ///      All rights reserved.
 * /// </copyright>
 * /// <summary>
-* /// Initializer class of my project.
+* /// Initial class
 * /// </summary>
 * /// --------------------------------------------------------------------------------------------------------------------
 
-CREATEOBJECT("main")
+return CREATEOBJECT("clProgram")
 
-DEFINE CLASS main As Custom
+DEFINE CLASS clProgram AS Custom
 	
 	* /// <summary>
 	* /// Class constructor.
 	* /// </summary>
 	PROCEDURE Init()
-		SET DEFAULT TO ( JUSTPATH( SYS( 16,0 ) ) )
+		SET PROCEDURE TO "User.Host\clStarUp" ADDITIVE
+		
+		CREATEOBJECT("clStarUp")
+		
+		RELEASE PROCEDURE "User.Host\clStarUp"
+	ENDPROC	
 
-		SET PROCEDURE TO "User.Host\clProgram" ADDITIVE
-
-		oApp = CREATEOBJECT("clProgram")
-
-		RELEASE PROCEDURE "User.Host\clProgram"
-	ENDPROC
-	
 	* /// <summary>
 	* /// Handle errors at runtime.
 	* /// </summary>
@@ -33,6 +31,6 @@ DEFINE CLASS main As Custom
 	* ///      <param Name="nLine">Line number.</param>
 	* /// </paragramList>
 	PROCEDURE Error(nError AS Number, cMethod AS String, nLine AS Number)
-		DO "User.Host\Extensions\clExceptionHandlerExtension" WITH nError, cMethod, nLine, This.Class
+		DO clExceptionHandlerExtension WITH nError, cMethod, nLine, This.Class
 	ENDPROC
 ENDDEFINE

@@ -54,4 +54,4 @@ GO
 
 -- DROP PROCEDURE spGetUserByCedula
 
-SELECT * FROM tblUsuarios;
+-- SELECT * FROM tblUsuarios;
